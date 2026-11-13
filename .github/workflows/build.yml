@@ -28,7 +28,7 @@ jobs:
             Sort-Object FullName |
             ForEach-Object { "$((Get-FileHash $_ -Algorithm SHA256).Hash.ToLower())  $([IO.Path]::GetRelativePath('out', $_.FullName).Replace('\', '/'))" } |
             Set-Content out/SHA256SUMS.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: lazarus-native-${{ github.sha }}
           path: out
