@@ -23,7 +23,7 @@
          NVAPI (NVIDIA) is multi-client-safe by design; ADLX (AMD) explicitly so. -->
     <PackageReference Include="NvAPIWrapper.Net" Version="0.8.1.101" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.9" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="11.0.0" />
   </ItemGroup>
 
   <!-- Vendor/AmdAdlx.cs: from https://github.com/epinter/adlxwrapper (MPL-2.0, Copyright Emerson
