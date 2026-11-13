@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <!-- Windows-only by construction (WDDM/D3DKMT, ETW, perf counters, WinRing0); declaring it
+         stops CA1416 flagging every PerformanceCounter call as possibly-unsupported. -->
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- CPU/RAM sensors: LibreHardwareMonitor's own kernel driver, works reliably. -->
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.2.4" />
+    <!-- GPU sensors: official vendor SDKs instead of LibreHardwareMonitor's GPU support,
+         which doesn't cover temp/clock for current-gen AMD cards (see AmdAdlxGpuReader.cs).
+         NVAPI (NVIDIA) is multi-client-safe by design; ADLX (AMD) explicitly so. -->
+    <PackageReference Include="NvAPIWrapper.Net" Version="0.8.1.101" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.9" />
+  </ItemGroup>
+
+  <!-- Vendor/AmdAdlx.cs: from https://github.com/epinter/adlxwrapper (MPL-2.0, Copyright Emerson
+       Pinter). Pure C# P/Invoke wrapper over amdadlx64.dll (ships with the AMD driver) — no
+       SWIG/native SDK build step needed. Picked up automatically by the SDK's default globbing;
+       see THIRD_PARTY_NOTICES.md and Vendor/AmdAdlx.LICENSE.txt. Not written against our
+       Nullable-enable setting; its warnings are suppressed via Vendor/.editorconfig. -->
+
+</Project>

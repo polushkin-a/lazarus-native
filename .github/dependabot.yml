@@ -1,0 +1,11 @@
+# NuGet packages and the CI actions: monthly PRs; the build must pass before anything merges.
+version: 2
+updates:
+  - package-ecosystem: nuget
+    directories: ["/SensorBridge", "/KeyHook"]
+    schedule:
+      interval: monthly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

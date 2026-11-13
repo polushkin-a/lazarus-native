@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <!-- WH_KEYBOARD_LL + P/Invoke are Windows-only; declaring it stops CA1416 noise. -->
+    <SupportedOSPlatform>windows</SupportedOSPlatform>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AssemblyName>KeyHook</AssemblyName>
+    <!-- No manifest / asInvoker: a low-level keyboard hook does NOT need elevation, unlike SensorBridge. -->
+  </PropertyGroup>
+
+</Project>
