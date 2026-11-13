@@ -5,7 +5,7 @@ KeyHook uses only the .NET runtime.
 
 | Component                                                         | License                                         | Source                                                       |
 | ----------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------ |
-| LibreHardwareMonitorLib 0.9.6                                     | MPL-2.0 (`licenses/MPL-2.0.txt`)                | https://github.com/LibreHardwareMonitor/LibreHardwareMonitor |
+| LibreHardwareMonitorLib 0.9.6                                     | MPL-2.0 (`LICENSE`)                             | https://github.com/LibreHardwareMonitor/LibreHardwareMonitor |
 | adlxwrapper (`SensorBridge/Vendor/AmdAdlx.cs`) — © Emerson Pinter | MPL-2.0 (`SensorBridge/Vendor/AmdAdlx.LICENSE.txt`) | https://github.com/epinter/adlxwrapper                       |
 | NvAPIWrapper.Net 0.8.1.101 — © Soroush Falahati 2018              | LGPL-3.0 (`licenses/LGPL-3.0.txt`, `licenses/GPL-3.0.txt`) | https://github.com/falahati/NvAPIWrapper                     |
 | Microsoft.Diagnostics.Tracing.TraceEvent 3.2.4                    | MIT                                             | https://github.com/microsoft/perfview                        |

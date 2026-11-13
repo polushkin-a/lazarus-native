@@ -56,5 +56,8 @@ SHA-256 sums as artifacts. How the release binaries are signed: [CODE_SIGNING_PO
 
 ## License
 
-MIT — see [LICENSE](LICENSE). `SensorBridge/Vendor/AmdAdlx.cs` stays under MPL-2.0; third-party libraries are listed
-in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Copyright (c) 2026 Alexander Polushkin. [Mozilla Public License 2.0](LICENSE): use it, change it, ship it — also inside
+closed software — but if you distribute a changed version, the changes to these files stay open under the same
+license. Third-party libraries are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+Improvements are welcome as pull requests.
