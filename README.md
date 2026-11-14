@@ -44,7 +44,8 @@ is why it is a separate, small (~130 lines), open, signed program: read [`KeyHoo
 
 ## Build
 
-Requires the .NET 8 SDK on Windows.
+Requires the .NET 10 SDK on Windows (.NET 10 is the LTS release, supported to November 2028; the runtime ships inside
+the published programs, so it has to be one that still gets security fixes).
 
 ```powershell
 dotnet publish SensorBridge/SensorBridge.csproj -c Release -r win-x64 --self-contained -o publish/SensorBridge
