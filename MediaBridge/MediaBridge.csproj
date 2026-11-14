@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- .NET 10 (LTS to November 2028) with the Windows SDK projection: the media sessions are a WinRT API
+         (Windows.Media.Control, Windows 10 1809+). -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>false</SelfContained>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <AssemblyName>MediaBridge</AssemblyName>
+    <!-- No manifest / asInvoker: the media sessions and the volume are the user's own, no elevation. -->
+  </PropertyGroup>
+
+</Project>
