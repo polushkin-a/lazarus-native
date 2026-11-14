@@ -19,7 +19,7 @@
   <ItemGroup>
     <!-- CPU/RAM sensors: LibreHardwareMonitor's own kernel driver, works reliably. -->
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
-    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.2.8" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="4.0.0" />
     <!-- GPU sensors: official vendor SDKs instead of LibreHardwareMonitor's GPU support,
          which doesn't cover temp/clock for current-gen AMD cards (see AmdAdlxGpuReader.cs).
          NVAPI (NVIDIA) is multi-client-safe by design; ADLX (AMD) explicitly so. -->
