@@ -139,7 +139,7 @@ for (long tick = 0; ; tick++)
     if (tick % HardwareEveryNTicks == 0) computer.Accept(updateVisitor);
 
     var payload = new TelemetryPayload(
-        BuildMetrics(computer, gpuReader, fpsReader, perfReader, pingReader),
+        OnlyFinite(BuildMetrics(computer, gpuReader, fpsReader, perfReader, pingReader)),
         BuildDevices(computer, gpuReader));
     var json = JsonSerializer.Serialize(payload, jsonOptions);
     Console.WriteLine(json);
@@ -185,7 +185,7 @@ static Dictionary<string, object?> BuildMetrics(Computer computer, IGpuReader? g
     // When a machine has several of the same component (3 drives, 4 NICs, physical vs virtual
     // memory), qualify the key with the device's own name rather than an index: it says what the
     // thing actually is, and it stays stable if enumeration order changes.
-    foreach (var group in computer.Hardware.GroupBy(h => h.HardwareType))
+    foreach (var group in Reported(computer).GroupBy(h => h.HardwareType))
     {
         var list = group.ToList();
         foreach (var hw in list)
@@ -259,7 +259,7 @@ static Dictionary<string, string> BuildDevices(Computer computer, IGpuReader? gp
 {
     var d = new Dictionary<string, string>();
 
-    foreach (var group in computer.Hardware.GroupBy(h => h.HardwareType))
+    foreach (var group in Reported(computer).GroupBy(h => h.HardwareType))
     {
         var list = group.ToList();
         foreach (var hw in list)
@@ -278,6 +278,11 @@ static Dictionary<string, string> BuildDevices(Computer computer, IGpuReader? gp
     return d;
 }
 
+// The hardware worth reporting: everything LibreHardwareMonitor found, except network "adapters" that aren't real
+// ones (filter drivers, WAN miniports, absent adapters — NetAdapters.cs).
+static IEnumerable<IHardware> Reported(Computer computer) =>
+    computer.Hardware.Where(h => h.HardwareType != HardwareType.Network || NetAdapters.IsReal(h.Name));
+
 static void AddSensors(Dictionary<string, object?> m, string prefix, IHardware hardware)
 {
     foreach (var s in hardware.Sensors)
@@ -293,6 +298,20 @@ static void AddSensors(Dictionary<string, object?> m, string prefix, IHardware h
 
 static double Round(float v, int digits = 0) => Math.Round(v, digits);
 
+// A sensor that reads NaN or ±Infinity (a division by zero inside a driver or a counter) has no reading: it goes out
+// as null. JSON can't carry those values at all — one of them used to throw out of the serializer and stop the whole
+// stream. Each such sensor is named once on stderr, so it can be tracked down.
+static Dictionary<string, object?> OnlyFinite(Dictionary<string, object?> m)
+{
+    var bad = m.Where(kv => kv.Value is double d && !double.IsFinite(d)).ToList(); // not while enumerating m
+    foreach (var (key, value) in bad)
+    {
+        m[key] = null;
+        if (NonFinite.Seen.Add(key)) Console.Error.WriteLine($"non-finite reading, sent as null: {key} = {value}");
+    }
+    return m;
+}
+
 // "Core (Tctl/Tdie)" -> "core_tctl_tdie", "CPU Core #1" -> "cpu_core_1"
 static string Slug(string name)
 {
@@ -305,6 +324,12 @@ static string Slug(string name)
 /// <param name="Metrics">Flat "sensor path -> value" catalog.</param>
 /// <param name="Devices">Metric prefix -> the hardware's own name, for labelling.</param>
 record TelemetryPayload(Dictionary<string, object?> Metrics, Dictionary<string, string> Devices);
+
+/// <summary>Sensors already reported as non-finite (OnlyFinite) — each is named once, not every tick.</summary>
+static class NonFinite
+{
+    public static readonly HashSet<string> Seen = new();
+}
 
 class UpdateVisitor : IVisitor
 {
