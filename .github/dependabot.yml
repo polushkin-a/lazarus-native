@@ -5,6 +5,13 @@ updates:
     directories: ["/SensorBridge", "/KeyHook"]
     schedule:
       interval: monthly
+    ignore:
+      # The runtime's own packages follow the runtime's major (10.x while we target .NET 10): a new major comes with
+      # moving the target framework, deliberately — not as a package bump against an older runtime.
+      - dependency-name: "System.*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Microsoft.Extensions.*"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

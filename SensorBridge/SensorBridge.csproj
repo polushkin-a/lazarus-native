@@ -2,7 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
+    <!-- .NET 10 (LTS, supported to November 2028). .NET 8's support ended 2026-11-10; the runtime ships inside
+         the app (self-contained publish), so it must be one that still gets security fixes. -->
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -17,13 +19,14 @@
   <ItemGroup>
     <!-- CPU/RAM sensors: LibreHardwareMonitor's own kernel driver, works reliably. -->
     <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6" />
-    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.2.4" />
+    <PackageReference Include="Microsoft.Diagnostics.Tracing.TraceEvent" Version="3.2.8" />
     <!-- GPU sensors: official vendor SDKs instead of LibreHardwareMonitor's GPU support,
          which doesn't cover temp/clock for current-gen AMD cards (see AmdAdlxGpuReader.cs).
          NVAPI (NVIDIA) is multi-client-safe by design; ADLX (AMD) explicitly so. -->
     <PackageReference Include="NvAPIWrapper.Net" Version="0.8.1.101" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.9" />
+    <!-- The runtime's own packages follow the runtime's major (10.x on .NET 10). -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.15" />
+    <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="10.0.15" />
   </ItemGroup>
 
   <!-- Vendor/AmdAdlx.cs: from https://github.com/epinter/adlxwrapper (MPL-2.0, Copyright Emerson
