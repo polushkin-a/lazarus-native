@@ -1,12 +1,12 @@
 # lazarus-native
 
-The two Windows helper programs of [Lazarus](https://github.com/polushkin-a/lazarus-releases) — a PC telemetry
-dashboard and control deck driven from your phone. They are the parts of Lazarus that need more trust than an
-ordinary app: one reads hardware sensors with administrator rights, the other briefly listens to the keyboard. So
+The Windows helper programs of [Lazarus](https://github.com/polushkin-a/lazarus-releases) — a PC telemetry dashboard
+and control deck driven from your phone. They are the parts of Lazarus that reach into Windows: one reads hardware
+sensors with administrator rights, one briefly listens to the keyboard, one sees what you play and sets the volume. So
 their source is open, here, and the release binaries are code-signed — you can read exactly what you are trusting.
 
-The rest of Lazarus (the Electron app, the phone app) is a separate, closed-source product; it starts these two
-programs and talks to them as described below. Nothing else of Lazarus runs elevated or touches the keyboard.
+The rest of Lazarus (the Electron app, the phone app) is a separate, closed-source product; it starts these programs
+and talks to them as described below. Nothing else of Lazarus runs elevated or touches the keyboard.
 
 ## SensorBridge
 
@@ -42,6 +42,22 @@ Records a keyboard shortcut for a Lazarus tile — including combinations Window
 This is the kind of program antivirus software treats with suspicion — a keyboard hook looks like a keylogger. That
 is why it is a separate, small (~130 lines), open, signed program: read [`KeyHook/Program.cs`](KeyHook/Program.cs).
 
+## MediaBridge
+
+What Windows is playing, and the system volume — for Lazarus's Media tiles (Now Playing, play / pause / next, a
+volume slider).
+
+- **What it reads:** the current system media session — the player Windows shows in its own media flyout (Spotify, a
+  browser tab, VLC…): its title, artist, album, cover, position, whether it plays (Windows' `Windows.Media.Control`
+  API); and the default output device's volume and mute (Core Audio, `IAudioEndpointVolume`).
+- **What it does:** play / pause, next, previous, stop and seek in that session; sets the volume and mute — only when
+  Lazarus asks.
+- **How it talks:** JSON lines on its own standard output (events: the track, the cover as a ≤ 256 px JPEG, the volume)
+  and standard input (commands). It exits when Lazarus goes away (its stdin closes).
+- **No network, no files, no administrator rights** (it runs as you).
+
+Source: [`MediaBridge/`](MediaBridge/).
+
 ## Build
 
 Requires the .NET 10 SDK on Windows (.NET 10 is the LTS release, supported to November 2028; the runtime ships inside
@@ -50,6 +66,7 @@ the published programs, so it has to be one that still gets security fixes).
 ```powershell
 dotnet publish SensorBridge/SensorBridge.csproj -c Release -r win-x64 --self-contained -o publish/SensorBridge
 dotnet publish KeyHook/KeyHook.csproj -c Release -r win-x64 --self-contained -o publish/KeyHook
+dotnet publish MediaBridge/MediaBridge.csproj -c Release -r win-x64 --self-contained -o publish/MediaBridge
 ```
 
 CI builds every push and pull request the same way (`.github/workflows/build.yml`) and keeps the binaries with their
